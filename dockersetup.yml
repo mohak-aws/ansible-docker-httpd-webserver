@@ -1,0 +1,70 @@
+- hosts: mynamenode
+  tasks:
+  - yum_repository:
+      name: "docker"
+      baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/ 
+      description: "My docker Repo"
+      gpgcheck: no
+
+  - file:
+      state: directory
+      path: "/dvd1/"
+
+  - yum_repository:
+      baseurl: "/dvd1/AppStream"
+      name: "mydvd1"
+      description: "My yum dvd1 for package"
+      gpgcheck: no
+
+  - yum_repository:
+      baseurl: "/dvd1/BaseOS"
+      name: "/dvd2"
+      description: "My yum dvd2 for package"
+      gpgcheck: no
+  
+  - name: "Installation of docker in Managed Node"     
+    package:
+     name: "docker-ce-18.09.1-3.el7.x86_64"
+     state: present
+  
+  - name: "Starting docker and enable"
+    service:
+     name: "docker"
+     state: started
+
+  - name: "docker pull"
+    docker_image:
+            name: rhel8
+            source: pull
+
+#  - name: "Creating folder in httpd bash"
+#    file:
+#     path: /mywebpage
+#     state: directory
+# - name: "Copying html file"
+#    copy:
+#    src: "index.html"
+#    dest: "/mywebpage/"
+
+# - name: "copying to /var/www/html/"
+#   copy:
+#    src: "index.html"
+#    dest: "/var/www/html/"
+
+# - name: "Creating of httpd container"
+#   docker_container:
+#    name: "Webserver"
+#    image: httpd
+#    state: started
+#    exposed_ports: "80"
+#    ports: "1234:80"
+#    volumes: "mywebpage:/usr/local/apache2/htdocs/"
+
+# - selinux:
+#    state: disabled
+
+# - firewalld:
+#    port: "80/tcp"
+#    permanent: true
+#    immediate: true
+#    state: enabled
